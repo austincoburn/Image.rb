@@ -17,23 +17,24 @@ end
 ones
 end
 
-  def blur
+  def blur!(blur_distance)
     ones = image_manipulation
       @pixel.each_with_index do |row, row_number|
         row.each_with_index do |col, col_number|
           ones.each do |the_row_number, the_col_number|
-
-          if row_number == the_row_number && col_number == the_col_number
-            @pixel[row_number - 1][col_number] = 1 unless row_number == 0
-            @pixel[row_number + 1][col_number] = 1 unless row_number >= 3
-            @pixel[row_number][col_number - 1] = 1 unless col_number == 0
-            @pixel[row_number][col_number + 1] = 1 unless col_number >= 3
+            if manhattan_distance(col_number, row_number, the_col_number, the_row_number) <= blur_distance
+              @pixel[row_number][col_number] = 1
           end
         end
       end
     end
   end
 
+  def manhattan_distance(x1, y1, x2, y2)
+    horizontal_distance = (x2 - x1).abs
+    vertical_distance = (y2 - y1).abs
+    horizontal_distance + vertical_distance
+  end
 
 
  def output_image
@@ -44,15 +45,18 @@ end
 end
 
 image = Image.new([
-  [0, 0, 0, 0],
-  [0, 1, 0, 0],
-  [0, 0, 0, 1],
-  [0, 0, 0, 0]
+[0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0],
+[0, 0, 1, 0, 0, 0],
+[0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 0],
+[0, 0, 0, 0, 0, 1]
 ])
 
 image.output_image
 puts 
-image.blur
+image.blur!(2)
 
 image.output_image
 
